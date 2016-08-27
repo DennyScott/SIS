@@ -1,9 +1,0 @@
-C:\Users\denny\Development\SIS\SIS\SIS\bin\Debug\SIS.exe.config
-C:\Users\denny\Development\SIS\SIS\SIS\obj\Debug\SIS.csprojResolveAssemblyReference.cache
-C:\Users\denny\Development\SIS\SIS\SIS\obj\Debug\SIS.Properties.Resources.resources
-C:\Users\denny\Development\SIS\SIS\SIS\obj\Debug\SIS.csproj.GenerateResource.Cache
-C:\Users\denny\Development\SIS\SIS\SIS\bin\Debug\SIS.exe
-C:\Users\denny\Development\SIS\SIS\SIS\bin\Debug\SIS.pdb
-C:\Users\denny\Development\SIS\SIS\SIS\obj\Debug\SIS.frmMain.resources
-C:\Users\denny\Development\SIS\SIS\SIS\obj\Debug\SIS.exe
-C:\Users\denny\Development\SIS\SIS\SIS\obj\Debug\SIS.pdb
