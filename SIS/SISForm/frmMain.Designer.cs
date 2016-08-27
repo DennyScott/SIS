@@ -120,7 +120,7 @@
             this.lstStatus.Enabled = false;
             this.lstStatus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.lstStatus.IntegralHeight = false;
-            this.lstStatus.ItemHeight = 16;
+            this.lstStatus.ItemHeight = 20;
             this.lstStatus.Location = new System.Drawing.Point(493, 187);
             this.lstStatus.Name = "lstStatus";
             this.lstStatus.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -137,7 +137,7 @@
             this.txtBroadcast.MaxLength = 0;
             this.txtBroadcast.Name = "txtBroadcast";
             this.txtBroadcast.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtBroadcast.Size = new System.Drawing.Size(0, 22);
+            this.txtBroadcast.Size = new System.Drawing.Size(0, 26);
             this.txtBroadcast.TabIndex = 0;
             this.txtBroadcast.Visible = false;
             this.txtBroadcast.WordWrap = false;
@@ -191,7 +191,7 @@
             this.lstPlayers.Enabled = false;
             this.lstPlayers.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.lstPlayers.IntegralHeight = false;
-            this.lstPlayers.ItemHeight = 16;
+            this.lstPlayers.ItemHeight = 20;
             this.lstPlayers.Location = new System.Drawing.Point(493, 187);
             this.lstPlayers.Name = "lstPlayers";
             this.lstPlayers.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -250,7 +250,7 @@
             this.textBox1.MaxLength = 0;
             this.textBox1.Name = "textBox1";
             this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.textBox1.Size = new System.Drawing.Size(0, 22);
+            this.textBox1.Size = new System.Drawing.Size(0, 26);
             this.textBox1.TabIndex = 0;
             this.textBox1.Visible = false;
             this.textBox1.WordWrap = false;
@@ -271,7 +271,7 @@
             // 
             // frmMain
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            this.AutoScaleBaseSize = new System.Drawing.Size(8, 19);
             this.ClientSize = new System.Drawing.Size(986, 374);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox1);

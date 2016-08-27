@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using SISConnect.SharpConnect;
+﻿using SISConnect.SharpConnect;
+using UnityEngine;
 
 public class Link : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class Link : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(test.fnConnectResult("Your server IP or URL without HTTP://", 10000, System.Environment.MachineName));
+        Debug.Log(test.fnConnectResult("127.0.0.1", 10000, System.Environment.MachineName));
         if (test.res != "")
         {
             Debug.Log(test.res);
