@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Newtonsoft.Json;
+using SIS.Resources;
 
 namespace SIS
 {
@@ -14,14 +17,14 @@ namespace SIS
         private Thread _listenerThread;
 
         // This subroutine sends a message to all attached clients
-        private void Broadcast(string strMessage)
+        private void Broadcast(SocketMessage socketMessage)
         {
             // All entries in the clients Hashtable are UserConnection so it is possible
             // to assign it safely.
             foreach (DictionaryEntry entry in _clients)
             {
-                var client = (UserConnection)entry.Value;
-                client.SendData(strMessage);
+                var client = (UserConnection) entry.Value;
+                client.SendData(socketMessage);
             }
         }
 
@@ -29,18 +32,27 @@ namespace SIS
         // Hashtable.  if it does, send a REFUSE message, otherwise confirm with a JOIN.
         private void ConnectUser(string userName, UserConnection sender)
         {
+            Console.WriteLine("Trying to connect");
             if (_clients.Contains(userName))
             {
-                ReplyToSender("REFUSE", sender);
+                ReplyToSender("REFUSE", "Connection failed", sender);
             }
             else
             {
+                var message = userName + " has joined the chat.";
                 sender.Name = userName;
-                UpdateStatus(userName + " has joined the chat.");
+                UpdateStatus(message);
                 _clients.Add(userName, sender);
                 // Send a JOIN to sender, and notify all other clients that sender joined
-                ReplyToSender("JOIN", sender);
-                SendToClients("CHAT|" + sender.Name + " has joined the chat.", sender);
+                ReplyToSender("JOIN", message, sender);
+                var socketMessage = new SocketMessage
+                {
+                    Message = sender.Name + " has joined the chat.",
+                    Player = sender.Name,
+                    Command = "CHAT",
+                    GameTime = "temp"
+                };
+                SendToClients(socketMessage);
             }
         }
 
@@ -49,7 +61,14 @@ namespace SIS
         private void DisconnectUser(UserConnection sender)
         {
             UpdateStatus(sender.Name + " has left the chat.");
-            SendToClients("CHAT|" + sender.Name + " has left the chat.", sender);
+            var socketMessage = new SocketMessage
+            {
+                Message = sender.Name + " has left the chat.",
+                Player = sender.Name,
+                Command = "CHAT",
+                GameTime = "temp"
+            };
+            SendToClients(socketMessage);
             _clients.Remove(sender.Name);
         }
 
@@ -60,7 +79,7 @@ namespace SIS
             try
             {
                 // Listen for new connections.
-                _listener = new TcpListener(System.Net.IPAddress.Any, PortNum);
+                _listener = new TcpListener(IPAddress.Any, PortNum);
                 _listener.Start();
 
                 do
@@ -99,35 +118,41 @@ namespace SIS
         private void ListUsers(UserConnection sender)
         {
             UpdateStatus("Sending " + sender.Name + " a list of users online.");
-            var strUserList = (from DictionaryEntry entry in _clients select (UserConnection) entry.Value).Aggregate("LISTUSERS", (current, client) => current + "|" + client.Name);
+            var strUserList =
+                (from DictionaryEntry entry in _clients select (UserConnection) entry.Value).Aggregate("LISTUSERS",
+                    (current, client) => current + "|" + client.Name);
             // All entries in the clients Hashtable are UserConnection so it is possible
             // to assign it safely.
 
             // Send the list to the sender.
-            ReplyToSender(strUserList, sender);
+            ReplyToSender("USERLIST", strUserList, sender);
         }
 
         // This is the event handler for the UserConnection when it receives a full line.
         // Parse the cammand and parameters and take appropriate action.
         private void OnLineReceived(UserConnection sender, string data)
         {
+            Console.WriteLine("Line Recieved");
             // Message parts are divided by "|"  Break the string into an array accordingly.
             // Basically what happens here is that it is possible to get a flood of data during
             // the lock where we have combined commands and overflow
             // to simplify this proble, all I do is split the response by char 13 and then look
             // at the command, if the command is unknown, I consider it a junk message
             // and dump it, otherwise I act on it
-            var dataArray = data.Split((char)13);
-            dataArray = dataArray[0].Split((char)124);
+            var dataArray = data.Split((char) 13);
+            Console.WriteLine(dataArray[0]);
+            var socketMessage = JsonConvert.DeserializeObject<SocketMessage>(data);
+            
+            Console.WriteLine(socketMessage.Command);
 
             // dataArray(0) is the command.
-            switch (dataArray[0])
+            switch (socketMessage.Command)
             {
                 case "CONNECT":
-                    ConnectUser(dataArray[1], sender);
+                    ConnectUser(socketMessage.Player, sender);
                     break;
-                case "CHAT":
-                    SendChat(dataArray[1], sender);
+                case "BROADCAST":
+                    Broadcast(socketMessage);
                     break;
                 case "DISCONNECT":
                     DisconnectUser(sender);
@@ -135,36 +160,39 @@ namespace SIS
                 case "REQUESTUSERS":
                     ListUsers(sender);
                     break;
+                default:
+                    SendToClients(socketMessage);
+                    break;
             }
         }
 
         // This subroutine sends a response to the sender.
-        private void ReplyToSender(string strMessage, UserConnection sender)
+        private void ReplyToSender(string command, string message, UserConnection sender)
         {
-            sender.SendData(strMessage);
+            var gameTime = "temp";
+            sender.SendData(new SocketMessage
+            {
+                Command = command,
+                Message = message,
+                Player = sender.Name,
+                GameTime = gameTime
+            });
         }
 
-        // Send a chat message to all clients except sender.
-        private void SendChat(string message, UserConnection sender)
-        {
-            UpdateStatus(sender.Name + ": " + message);
-            SendToClients("CHAT|" + sender.Name + ": " + message, sender);
-        }
 
         // This subroutine sends a message to all attached clients except the sender.
-        private void SendToClients(string strMessage, UserConnection sender)
+        private void SendToClients(SocketMessage socketMessage)
         {
-            UserConnection client;
+            var gameTime = "temp";
+            UpdateStatus(socketMessage.Message);
             // All entries in the clients Hashtable are UserConnection so it is possible
             // to assign it safely.
             foreach (DictionaryEntry entry in _clients)
             {
-                client = (UserConnection)entry.Value;
+                var client = (UserConnection) entry.Value;
                 // Exclude the sender.
-                if (client.Name != sender.Name)
-                {
-                    client.SendData(strMessage);
-                }
+                if (client.Name != socketMessage.Player)
+                    client.SendData(socketMessage);
             }
         }
 

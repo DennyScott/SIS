@@ -3,3 +3,6 @@ C:\Users\denny\Development\SIS\SIS\SISConnect\bin\Debug\SISConnect.pdb
 C:\Users\denny\Development\SIS\SIS\SISConnect\obj\Debug\SISConnect.csprojResolveAssemblyReference.cache
 C:\Users\denny\Development\SIS\SIS\SISConnect\obj\Debug\SISConnect.dll
 C:\Users\denny\Development\SIS\SIS\SISConnect\obj\Debug\SISConnect.pdb
+C:\Users\denny\Development\SIS\SIS\SISConnect\bin\Debug\UnityEngine.dll
+C:\Users\denny\Development\SIS\SIS\SISConnect\bin\Debug\UnityEngine.xml
+C:\Users\denny\Development\SIS\SIS\SISConnect\bin\Debug\Zephyr.dll

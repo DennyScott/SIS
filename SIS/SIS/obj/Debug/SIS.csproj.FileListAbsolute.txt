@@ -4,3 +4,5 @@ C:\Users\Denny\Development\SIS\SIS\SIS\bin\Debug\SIS.exe
 C:\Users\Denny\Development\SIS\SIS\SIS\bin\Debug\SIS.pdb
 C:\Users\Denny\Development\SIS\SIS\SIS\obj\Debug\SIS.exe
 C:\Users\Denny\Development\SIS\SIS\SIS\obj\Debug\SIS.pdb
+C:\Users\denny\Development\SIS\SIS\SIS\bin\Debug\Newtonsoft.Json.dll
+C:\Users\denny\Development\SIS\SIS\SIS\bin\Debug\Newtonsoft.Json.xml

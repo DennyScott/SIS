@@ -1,4 +1,7 @@
-﻿namespace SIS
+﻿using Newtonsoft.Json;
+using SIS.Resources;
+
+namespace SIS
 {
     using System;
     using System.Net.Sockets;
@@ -42,13 +45,13 @@
         public event LineReceive LineReceived;
 
         // This subroutine uses a StreamWriter to send a message to the user.
-        public void SendData(string Data)
+        public void SendData(SocketMessage data)
         {
             //lock ensure that no other threads try to use the stream at the same time.
             lock (client.GetStream())
             {
                 StreamWriter writer = new StreamWriter(client.GetStream());
-                writer.Write(Data + (char)13 + (char)10);
+                writer.Write(JsonConvert.SerializeObject(data) + (char)13 + (char)10);
                 // Make sure all data is sent now.
                 writer.Flush();
             }
@@ -82,6 +85,7 @@
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
             }
         }
     }
